@@ -15,16 +15,16 @@
  */
 package org.springframework.integration.kafka.support;
 
-import org.junit.Assert;
-import org.junit.Test;
-import org.mockito.Mockito;
-import org.springframework.beans.factory.ListableBeanFactory;
-import org.springframework.integration.Message;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.junit.Assert;
+import org.junit.Test;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.ListableBeanFactory;
+import org.springframework.messaging.Message;
 
 /**
  * @author Soby Chacko

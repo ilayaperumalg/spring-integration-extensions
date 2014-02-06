@@ -8,19 +8,23 @@
  */
 package org.springframework.integration.kafka.support;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 
 import kafka.javaapi.producer.Producer;
 import kafka.producer.KeyedMessage;
 import kafka.serializer.DefaultEncoder;
+import kafka.serializer.Encoder;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.springframework.integration.Message;
+import org.springframework.messaging.Message;
 
 /**
  * @author Soby Chacko
  * @author Rajasekar Elango
+ * @author Ilayaperumal Gopinathan
  * @since 0.5
  */
 public class ProducerConfiguration<K, V> {
@@ -53,8 +57,12 @@ public class ProducerConfiguration<K, V> {
 		if (producerMetadata.getValueEncoder().getClass().isAssignableFrom(DefaultEncoder.class)) {
 			return (V) getByteStream(message.getPayload());
 		}
-		else if (message.getPayload().getClass().isAssignableFrom(producerMetadata.getValueClassType())) {
+		else if ((producerMetadata.getValueClassType() != null) && message.getPayload().getClass().isAssignableFrom(producerMetadata.getValueClassType())) {
 			return producerMetadata.getValueClassType().cast(message.getPayload());
+		}
+		// Allow any specific Encoder implementation to serialize the message as is
+		else if ((Encoder.class).isAssignableFrom(producerMetadata.getValueEncoder().getClass())) {
+			return (V) ((Encoder<Message<?>>)producerMetadata.getValueEncoder()).toBytes(message);
 		}
 
 		throw new Exception("Message payload type is not matching with what is configured");

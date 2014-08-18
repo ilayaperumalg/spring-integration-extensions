@@ -42,7 +42,7 @@ public class KafkaConsumerContextParserTests<K,V> {
 		final KafkaConsumerContext<K,V> consumerContext = appContext.getBean("consumerContext", KafkaConsumerContext.class);
 		Assert.assertNotNull(consumerContext);
 
-		final ConsumerMetadata<K,V> cm = appContext.getBean("consumerMetadata_default1", ConsumerMetadata.class);
+		final ConsumerMetadata<K,V> cm = appContext.getBean("consumerMetadata", ConsumerMetadata.class);
 		Assert.assertNotNull(cm);
 	}
 }
